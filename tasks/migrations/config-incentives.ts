@@ -4,51 +4,54 @@ import { waitForTx } from '../../helpers/misc-utils';
 import { PullRewardsIncentivesController__factory } from '../../types';
 
   // total amount of rewards that each incentives controller would distribute
-  const totalRewards = ['1000', '1000'];
+  const totalRewards = ['100000000000000000000000', '20000000000000000000000'];
+
+  // rewards duration in days
+  const durationInDays = [20, 20];
 
   const assetConfigs = {
     WNEAR: {
-      aToken: '0x6E20AE9deE86D03671668C92Dcc6230B10d67A1e',
-      vToken: '0xb6eF9802662577C5Cf8B0dA3141cFE4bE99b6C34',
-      aTokenEPS: ['964506172839506000000', '23148148148148200000000'],
-      vTokenEPS: ['96450617283950600000', '34722222222222200000000']
+      aToken: '0x15D95d82E4d4BE09Bc79Fd04a1700df2ea32885d',
+      vToken: '0x931673322f1d950C6905Bf9141cB5F9a1d349CC1',
+      aTokenEPS: ['11574074074074100', '925925925925926'],
+      vTokenEPS: ['5787037037037040', '462962962962963']
     },
     LINEAR: {
-      aToken: '0xC6561951A1592A001265B46e3c65b715cc61218D',
-      vToken: '0x7ABc9ec773582D19421Dd13F195282E27209ABD0',
-      aTokenEPS: ['1929012345679010000000', '28935185185185200000000'],
-      vTokenEPS: ['96450617283950600000', '17361111111111100000000']
+      aToken: '0xbA11fe204C31F62E6Cbdb235e0fB480d8E0e1843',
+      vToken: '0x370979265e5b12BfbB5BF05adFA3987eFFAFc8f7',
+      aTokenEPS: ['17361111111111100', '1388888888888890'],
+      vTokenEPS: ['0', '0']
     },
-    WETH: {
-      aToken: '0x44840c7a7d5Fa806bE2429F42F3C683FAfdCa7ff',
-      vToken: '0x1db13f2465389f4d340eCEb0351e957202187381',
-      aTokenEPS: ['1446759259259260000000', '11574074074074100000000'],
-      vTokenEPS: ['192901234567901000000', '11574074074074100000000']
-    },
+    // WETH: {
+    //   aToken: '0x44840c7a7d5Fa806bE2429F42F3C683FAfdCa7ff',
+    //   vToken: '0x1db13f2465389f4d340eCEb0351e957202187381',
+    //   aTokenEPS: ['1446759259259260000000', '11574074074074100000000'],
+    //   vTokenEPS: ['192901234567901000000', '11574074074074100000000']
+    // },
     USDC: {
-      aToken: '0xde49F8aD111e2dc2f6541d4179b3133F1a80606f',
-      vToken: '0x7985f7013A8F6CdbBD86EBfaaeEd8641D12370D5',
-      aTokenEPS: ['1446759259259260000000', '17361111111111100000000'],
-      vTokenEPS: ['964506172839506000000', '17361111111111100000000']
+      aToken: '0x8b81abc80e34bE72a94a3D84902DF94Dc81b5e98',
+      vToken: '0x7b90aFC831eC3C9C2aa31357959F37d4D8d4a8F7',
+      aTokenEPS: ['5787037037037040', '462962962962963'],
+      vTokenEPS: ['5787037037037040', '462962962962963']
     },
     USDT: {
-      aToken: '0x7200913df61AF931Dfcf906aEF0750E975182505',
-      vToken: '0xf4aE20388D1988615523015941A22D5D21A5C25F',
-      aTokenEPS: ['771604938271605000000', '17361111111111100000000'],
-      vTokenEPS: ['482253086419753000000', '17361111111111100000000']
+      aToken: '0x88bA3E13797a9527b082B25D614A724B8fC30498',
+      vToken: '0x05a1fC987c8A9ab3fA9C472D0E02F87a6bc69b30',
+      aTokenEPS: ['5787037037037040', '462962962962963'],
+      vTokenEPS: ['5787037037037040', '462962962962963']
     },
-    DAI: {
-      aToken: '0xd85E6F93Ea0feA6ee0d8Afe2c03645b723e7e6EA',
-      vToken: '0x19E3465646FC5f9F18158B30e90a5cf0167ea758',
-      aTokenEPS: ['482253086419753000000', '11574074074074100000000'],
-      vTokenEPS: ['482253086419753000000', '11574074074074100000000']
-    },
-    WBTC: {
-      aToken: '0xAd0EC8806224337A4ce906bA203B6344c15e6def',
-      vToken: '0xaee214895cbc9eab00024DDE06f86E7440E93a91',
-      aTokenEPS: ['241126543209877000000', '5787037037037000000000'],
-      vTokenEPS: ['48225308641975300000', '5787037037037000000000']
-    },
+    // DAI: {
+    //   aToken: '0xd85E6F93Ea0feA6ee0d8Afe2c03645b723e7e6EA',
+    //   vToken: '0x19E3465646FC5f9F18158B30e90a5cf0167ea758',
+    //   aTokenEPS: ['482253086419753000000', '11574074074074100000000'],
+    //   vTokenEPS: ['482253086419753000000', '11574074074074100000000']
+    // },
+    // WBTC: {
+    //   aToken: '0xAd0EC8806224337A4ce906bA203B6344c15e6def',
+    //   vToken: '0xaee214895cbc9eab00024DDE06f86E7440E93a91',
+    //   aTokenEPS: ['241126543209877000000', '5787037037037000000000'],
+    //   vTokenEPS: ['48225308641975300000', '5787037037037000000000']
+    // },
   };
 
   task(
@@ -89,7 +92,7 @@ import { PullRewardsIncentivesController__factory } from '../../types';
         }
 
         // TODO make it configurable
-        const distributionEnd = Math.floor(Date.now() / 1000) + (60 * 24 * 3600); // 2 months from now
+        const distributionEnd = Math.floor(Date.now() / 1000) + (durationInDays[index] * 24 * 3600); 
         await waitForTx(
           await incentivesProxy.setDistributionEnd(distributionEnd)
         );

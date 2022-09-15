@@ -31,5 +31,5 @@ task('rewards', 'Review rewards')
 
         const assetData = await incentivesProxy.getAssetData(asset);
         console.log('assetData');
-        console.log(assetData);
+        console.log(assetData.map(d => d.toBigInt()));
     });
