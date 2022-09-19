@@ -11,14 +11,14 @@ import { PullRewardsIncentivesController__factory } from '../../types';
 
   const assetConfigs = {
     WNEAR: {
-      aToken: '0x15D95d82E4d4BE09Bc79Fd04a1700df2ea32885d',
-      vToken: '0x931673322f1d950C6905Bf9141cB5F9a1d349CC1',
+      aToken: '0x99C484F3737c612fd4C97871D9bE956f03db44aA',
+      vToken: '0xa35CB206dBA3E44EA21F3ca9f3082B3E662cb399',
       aTokenEPS: ['11574074074074100', '925925925925926'],
       vTokenEPS: ['5787037037037040', '462962962962963']
     },
     LINEAR: {
-      aToken: '0xbA11fe204C31F62E6Cbdb235e0fB480d8E0e1843',
-      vToken: '0x370979265e5b12BfbB5BF05adFA3987eFFAFc8f7',
+      aToken: '0x3D8311dA7ca6476f5F3f170D44A64082c2381706',
+      vToken: '0x4D14F1f87b4d731064Db3d51f5Ccd995466882EB',
       aTokenEPS: ['17361111111111100', '1388888888888890'],
       vTokenEPS: ['0', '0']
     },
@@ -29,14 +29,14 @@ import { PullRewardsIncentivesController__factory } from '../../types';
     //   vTokenEPS: ['192901234567901000000', '11574074074074100000000']
     // },
     USDC: {
-      aToken: '0x8b81abc80e34bE72a94a3D84902DF94Dc81b5e98',
-      vToken: '0x7b90aFC831eC3C9C2aa31357959F37d4D8d4a8F7',
+      aToken: '0xD6769e773CB754A484250Fe7DFA0E6ba2277Afbf',
+      vToken: '0xC38D89c6Bed470b9669d825fd5C0Ffff2FC839De',
       aTokenEPS: ['5787037037037040', '462962962962963'],
       vTokenEPS: ['5787037037037040', '462962962962963']
     },
     USDT: {
-      aToken: '0x88bA3E13797a9527b082B25D614A724B8fC30498',
-      vToken: '0x05a1fC987c8A9ab3fA9C472D0E02F87a6bc69b30',
+      aToken: '0xC5570FD832572a01e8a49141948F32bb84E00bE2',
+      vToken: '0xF37E4e7FBBD0fC95303C642ED5AC90F0589A2612',
       aTokenEPS: ['5787037037037040', '462962962962963'],
       vTokenEPS: ['5787037037037040', '462962962962963']
     },

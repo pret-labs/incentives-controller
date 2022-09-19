@@ -25,7 +25,7 @@ contract DistributionManager is IAaveDistributionManager {
 
   address public immutable EMISSION_MANAGER;
 
-  uint8 public constant PRECISION = 0;
+  uint8 public constant PRECISION = 10;
 
   mapping(address => AssetData) public assets;
 
@@ -107,12 +107,23 @@ contract DistributionManager is IAaveDistributionManager {
     uint256 emissionPerSecond = assetConfig.emissionPerSecond;
     uint128 lastUpdateTimestamp = assetConfig.lastUpdateTimestamp;
 
+    console.log("_updateAssetStateInternal");
+    console.log("  asset", asset);
+    console.log("  totalStaked", totalStaked);
+    console.log("  oldIndex", oldIndex);
+    console.log("  eps", emissionPerSecond);
+    console.log("  lastUpdated", lastUpdateTimestamp);
+    console.log("");
+
     if (block.timestamp == lastUpdateTimestamp) {
       return oldIndex;
     }
 
     uint256 newIndex =
       _getAssetIndex(oldIndex, emissionPerSecond, lastUpdateTimestamp, totalStaked);
+
+    console.log("_updateAssetStateInternal oldIndex", oldIndex, " newIndex ", newIndex);
+    console.log("");
 
     if (newIndex != oldIndex) {
       require(uint104(newIndex) == newIndex, 'Index overflow');
@@ -145,7 +156,16 @@ contract DistributionManager is IAaveDistributionManager {
     uint256 userIndex = assetData.users[user];
     uint256 accruedRewards = 0;
 
+    console.log("_updateUserAssetInternal");
+    console.log("  user", user);
+    console.log("  asset", asset);
+    console.log("  stakedByUser", stakedByUser);
+    console.log("  totalStaked", totalStaked);
+
     uint256 newIndex = _updateAssetStateInternal(asset, assetData, totalStaked);
+
+    console.log("_updateUserAssetInternal, userIndex", userIndex, " newIndex ", newIndex);
+    console.log("");
 
     if (userIndex != newIndex) {
       if (stakedByUser != 0) {
@@ -245,18 +265,32 @@ contract DistributionManager is IAaveDistributionManager {
     uint256 totalBalance
   ) internal view returns (uint256) {
     uint256 distributionEnd = _distributionEnd;
+
+    console.log("_getAssetIndex 1");
+    console.log("  currentIndex", currentIndex);
+    console.log("  eps", emissionPerSecond);
+    console.log("  lastUpdated", lastUpdateTimestamp);
+    console.log("  totalBalance", totalBalance);
+    console.log("");
+
     if (
       emissionPerSecond == 0 ||
       totalBalance == 0 ||
       lastUpdateTimestamp == block.timestamp ||
       lastUpdateTimestamp >= distributionEnd
     ) {
+      console.log("_getAssetIndex no need to update");
       return currentIndex;
     }
 
     uint256 currentTimestamp =
       block.timestamp > distributionEnd ? distributionEnd : block.timestamp;
     uint256 timeDelta = currentTimestamp.sub(lastUpdateTimestamp);
+
+    console.log("_getAssetIndex 2");
+    console.log("  timeDelta", timeDelta);
+    console.log("");
+
     return
       emissionPerSecond.mul(timeDelta).mul(10**uint256(PRECISION)).div(totalBalance).add(
         currentIndex

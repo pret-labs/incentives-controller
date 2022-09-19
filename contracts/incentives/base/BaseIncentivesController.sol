@@ -10,6 +10,8 @@ import {IERC20} from '@aave/aave-stake/contracts/interfaces/IERC20.sol';
 import {IScaledBalanceToken} from '../../interfaces/IScaledBalanceToken.sol';
 import {IAaveIncentivesController} from '../../interfaces/IAaveIncentivesController.sol';
 
+import "hardhat/console.sol";
+
 /**
  * @title BaseIncentivesController
  * @notice Abstract contract template to build Distributors contracts for ERC20 rewards to protocol participants
@@ -118,8 +120,16 @@ abstract contract BaseIncentivesController is
   ) external {
     require(msg.sender == _proxy, "Caller is not proxy");
 
+    console.log("Before handleProxyAction");
+    console.log("  user", user);
+    console.log("  totalSupply", totalSupply);
+    console.log("  userBal", userBalance);
+    console.log("  asset", asset);
+    console.log("");
+
     uint256 accruedRewards = _updateUserAssetInternal(user, asset, userBalance, totalSupply);
     if (accruedRewards != 0) {
+      console.log("User accrued rewards", user, accruedRewards);
       _usersUnclaimedRewards[user] = _usersUnclaimedRewards[user].add(accruedRewards);
       emit RewardsAccrued(user, accruedRewards);
     }
