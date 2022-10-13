@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 library DistributionTypes {
   struct AssetConfigInput {
-    uint104 emissionPerSecond;
+    uint256 emissionPerSecond;
     uint256 totalStaked;
     address underlyingAsset;
   }

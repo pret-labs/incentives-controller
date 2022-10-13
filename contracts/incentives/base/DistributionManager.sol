@@ -17,15 +17,15 @@ contract DistributionManager is IAaveDistributionManager {
   using SafeMath for uint256;
 
   struct AssetData {
-    uint104 emissionPerSecond;
-    uint104 index;
+    uint256 emissionPerSecond;
+    uint256 index;
     uint40 lastUpdateTimestamp;
     mapping(address => uint256) users;
   }
 
   address public immutable EMISSION_MANAGER;
 
-  uint8 public constant PRECISION = 10;
+  uint8 public constant PRECISION = 18;
 
   mapping(address => AssetData) public assets;
 
@@ -126,9 +126,9 @@ contract DistributionManager is IAaveDistributionManager {
     console.log("");
 
     if (newIndex != oldIndex) {
-      require(uint104(newIndex) == newIndex, 'Index overflow');
+      require(uint256(newIndex) == newIndex, 'Index overflow');
       //optimization: storing one after another saves one SSTORE
-      assetConfig.index = uint104(newIndex);
+      assetConfig.index = uint256(newIndex);
       assetConfig.lastUpdateTimestamp = uint40(block.timestamp);
       emit AssetIndexUpdated(asset, newIndex);
     } else {

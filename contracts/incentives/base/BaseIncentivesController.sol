@@ -90,9 +90,9 @@ abstract contract BaseIncentivesController is
       new DistributionTypes.AssetConfigInput[](assets.length);
 
     for (uint256 i = 0; i < assets.length; i++) {
-      require(uint104(emissionsPerSecond[i]) == emissionsPerSecond[i], 'Index overflow at emissionsPerSecond');
+      require(uint256(emissionsPerSecond[i]) == emissionsPerSecond[i], 'Index overflow at emissionsPerSecond');
       assetsConfig[i].underlyingAsset = assets[i];
-      assetsConfig[i].emissionPerSecond = uint104(emissionsPerSecond[i]);
+      assetsConfig[i].emissionPerSecond = uint256(emissionsPerSecond[i]);
       assetsConfig[i].totalStaked = IScaledBalanceToken(assets[i]).scaledTotalSupply();
     }
     _configureAssets(assetsConfig);
@@ -173,6 +173,27 @@ abstract contract BaseIncentivesController is
     return distributedRewards.sub(_userClaimedRewards[user]);
   }
 
+  // Get the following info about CORN progressive rewards:
+  //   - total rewards: total granted (including claimed)
+  //   - pending rewards: granted but not yet distributed (not claimable)
+  //   - claimable rewards: current claimable
+  function getProgressiveRewardsInfo(address[] calldata assets, address user)
+    public
+    view
+    returns (uint256, uint256, uint256)
+  {
+    uint256 eventualClaimable = getRewardsBalance(assets, user);
+    // how many rewards were granted to this user so far
+    uint256 totalRewards = eventualClaimable.add(_userClaimedRewards[user]);
+
+    uint256 distributedRewards = distributedAmount(totalRewards);
+    uint256 pendingRewards = eventualClaimable - distributedRewards;
+
+    uint256 claimableRewards = getCurrentClaimableBalance(assets, user);
+
+    return (totalRewards, pendingRewards, claimableRewards);
+  }
+
   // How many tokens out of total were already distributed by progressive emission strategy
   function distributedAmount(uint256 total)
     internal
@@ -183,6 +204,10 @@ abstract contract BaseIncentivesController is
     controllerAccumulatedRewards = controllerAccumulatedRewards <= TOTAL_REWARDS
       ? controllerAccumulatedRewards
       : TOTAL_REWARDS;
+
+    console.log("distributedAmount controllerAccumulatedRewards", controllerAccumulatedRewards);
+    console.log("total rewards", TOTAL_REWARDS);
+    console.log();
 
     return total.mul(controllerAccumulatedRewards).div(TOTAL_REWARDS);
   }
@@ -257,10 +282,14 @@ abstract contract BaseIncentivesController is
   ) internal virtual returns (uint256) {
     require(_claimable, 'Not claimable now');
 
+    console.log("Begin _claimRewards");
+
     if (amount == 0) {
+      console.log('  zero amount');
       return 0;
     }
     uint256 totalUnclaimedRewards = _usersUnclaimedRewards[user];
+    console.log("  totalUnclaimedRewards", totalUnclaimedRewards);
 
     DistributionTypes.UserStakeInput[] memory userState =
       new DistributionTypes.UserStakeInput[](assets.length);
@@ -271,11 +300,13 @@ abstract contract BaseIncentivesController is
     }
 
     uint256 accruedRewards = _claimRewards(user, userState);
+    console.log("  accruedRewards", accruedRewards);
     if (accruedRewards != 0) {
       totalUnclaimedRewards = totalUnclaimedRewards.add(accruedRewards);
       emit RewardsAccrued(user, accruedRewards);
     }
 
+    console.log("  new totalUnclaimedRewards", totalUnclaimedRewards);
     if (totalUnclaimedRewards == 0) {
       return 0;
     }
@@ -284,12 +315,19 @@ abstract contract BaseIncentivesController is
     // _usersUnclaimedRewards[user] = unclaimedRewards - amountToClaim; // Safe due to the previous line
     uint256 userTotalRewards = totalUnclaimedRewards.add(_userClaimedRewards[user]);
     uint256 amountToClaim = distributedAmount(userTotalRewards).sub(_userClaimedRewards[user]);
+
+    console.log("  userTotalRewards", userTotalRewards);
+    console.log("  distributedAmount", distributedAmount(userTotalRewards));
+    console.log("  userClaimedRewards", _userClaimedRewards[user]);
+    console.log("  amountToClaim", amountToClaim);
     
     _usersUnclaimedRewards[user] = totalUnclaimedRewards.sub(amountToClaim);
     _userClaimedRewards[user] = _userClaimedRewards[user].add(amountToClaim);
 
     _totalSent = _totalSent.add(amountToClaim);
 
+    console.log("After _claimRewards, sent ", amountToClaim, " to user ", to);
+    console.log();
     _transferRewards(to, amountToClaim);
     emit RewardsClaimed(user, to, claimer, amountToClaim);
 
