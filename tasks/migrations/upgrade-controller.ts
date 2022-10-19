@@ -28,7 +28,7 @@ task(
       );
 
       const proxy = InitializableAdminUpgradeabilityProxy__factory.connect(
-          '0x038B86d9d8FAFdd0a02ebd1A476432877b0107C8',
+          '0x2765849c86659Ad03c7f80c37395043c327aE383',
           await getSigner(1), 
       );
 

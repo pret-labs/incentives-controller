@@ -38,4 +38,14 @@ task('rewards', 'Review rewards')
         const assetData = await incentivesProxy.getAssetData(asset);
         console.log('assetData');
         console.log(assetData.map(d => d.toBigInt()));
+        console.log();
+
+        const progressiveInfo = await incentivesProxy.getProgressiveRewardsInfo(
+            [asset],
+            user
+        );
+        console.log('progressive info');
+        console.log('total rewards', progressiveInfo[0].toString());
+        console.log('pending rewards', progressiveInfo[1].toString());
+        console.log('claimable rewards', progressiveInfo[2].toString());
     });
