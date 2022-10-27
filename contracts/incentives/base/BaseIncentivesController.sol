@@ -187,7 +187,7 @@ abstract contract BaseIncentivesController is
     uint256 totalRewards = eventualClaimable.add(_userClaimedRewards[user]);
 
     uint256 distributedRewards = distributedAmount(totalRewards);
-    uint256 pendingRewards = eventualClaimable - distributedRewards;
+    uint256 pendingRewards = totalRewards - distributedRewards;
 
     uint256 claimableRewards = getCurrentClaimableBalance(assets, user);
 

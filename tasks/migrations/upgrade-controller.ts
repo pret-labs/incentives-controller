@@ -14,8 +14,9 @@ task(
   `Deploy and initializes the PullRewardsIncentivesController contract`
 )
   .addParam('token')
+  .addParam('proxy')
   .setAction(
-    async ({ token, }, localBRE) => {
+    async ({ token, proxy, }, localBRE) => {
       await localBRE.run('set-DRE');
       const deployer = await getFirstSigner();
       const proxyAdmin = await (await getSigner(1)).getAddress();
@@ -27,13 +28,13 @@ task(
         false
       );
 
-      const proxy = InitializableAdminUpgradeabilityProxy__factory.connect(
-          '0x2765849c86659Ad03c7f80c37395043c327aE383',
+      const proxyContract = InitializableAdminUpgradeabilityProxy__factory.connect(
+          proxy,
           await getSigner(1), 
       );
 
       await waitForTx(
-          await proxy.upgradeTo(incentivesControllerImpl.address)
+          await proxyContract.upgradeTo(incentivesControllerImpl.address)
       );
       console.log(`upgraded.`);
     }
