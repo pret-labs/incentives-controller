@@ -19,17 +19,33 @@ task('rewards', 'Review rewards')
 
         const token = await incentivesProxy.REWARD_TOKEN();
 
-        const res = await incentivesProxy.getRewardsBalance(
+        const totalRewards = await incentivesProxy.getRewardsBalance(
+            [asset],
+            user
+        );
+        const claimableRewards = await incentivesProxy.getCurrentClaimableBalance(
             [asset],
             user
         );
 
         console.log('reward token is');
         console.log(token);
-        console.log('reward is');
-        console.log(res.toString());
+        console.log('total reward is');
+        console.log(totalRewards.toString());
+        console.log('current claimable reward is');
+        console.log(claimableRewards.toString());
 
         const assetData = await incentivesProxy.getAssetData(asset);
         console.log('assetData');
-        console.log(assetData);
+        console.log(assetData.map(d => d.toBigInt()));
+        console.log();
+
+        const progressiveInfo = await incentivesProxy.getProgressiveRewardsInfo(
+            [asset],
+            user
+        );
+        console.log('progressive info');
+        console.log('total rewards', progressiveInfo[0].toString());
+        console.log('pending rewards', progressiveInfo[1].toString());
+        console.log('claimable rewards', progressiveInfo[2].toString());
     });

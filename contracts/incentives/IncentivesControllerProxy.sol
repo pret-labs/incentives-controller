@@ -7,8 +7,6 @@ import {BaseIncentivesController} from "./base/BaseIncentivesController.sol";
 
 import "hardhat/console.sol";
 
-
-
 contract IncentivesControllerProxy is Ownable {
   BaseIncentivesController[] private _controllers;
 
@@ -32,6 +30,7 @@ contract IncentivesControllerProxy is Ownable {
     uint256 userBalance
   ) external {
     for (uint256 i = 0; i < _controllers.length; i++) {
+      console.log("Proxy handleAction, notify", address(_controllers[i]));
       _controllers[i].handleProxyAction(user, totalSupply, userBalance, msg.sender);
     }
   }
