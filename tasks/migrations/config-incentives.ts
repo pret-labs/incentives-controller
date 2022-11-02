@@ -4,10 +4,10 @@ import { waitForTx } from '../../helpers/misc-utils';
 import { PullRewardsIncentivesController__factory } from '../../types';
 
   // total amount of rewards that each incentives controller would distribute
-  const totalRewards = ['100000000000000000000000', '20000000000000000000000'];
+  const totalRewards = ['50000000000000000000000', '20000000000000000000000'];
 
   // rewards duration in days
-  const durationInDays = [20, 20];
+  const durationInDays = [10, 50];
 
   const assetConfigs = {
     WNEAR: {
