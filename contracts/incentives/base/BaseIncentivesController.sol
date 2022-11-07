@@ -62,10 +62,6 @@ abstract contract BaseIncentivesController is
     _claimable = claimable;
   }
 
-  function setRewardToken(address token) public onlyEmissionManager {
-    REWARD_TOKEN = token;
-  }
-
   function setProxy(address proxy) public onlyEmissionManager {
     _proxy = proxy;
   }
