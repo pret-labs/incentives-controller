@@ -12,16 +12,40 @@ task('rewards', 'Review rewards')
 
         // increase timestamp by 1 sec
         // await localBRE.ethers.provider.send('evm_increaseTime', [1]);
-        await localBRE.ethers.provider.send('evm_mine', []);
+        // await localBRE.ethers.provider.send('evm_mine', []);
 
         const incentivesProxy = PullRewardsIncentivesController__factory
             .connect(proxy, signer);
 
-        const res = await incentivesProxy.getRewardsBalance(
+        const token = await incentivesProxy.REWARD_TOKEN();
+
+        const totalRewards = await incentivesProxy.getRewardsBalance(
+            [asset],
+            user
+        );
+        const claimableRewards = await incentivesProxy.getCurrentClaimableBalance(
             [asset],
             user
         );
 
-        console.log('reward is');
-        console.log(res.toString());
+        console.log('reward token is');
+        console.log(token);
+        console.log('total reward is');
+        console.log(totalRewards.toString());
+        console.log('current claimable reward is');
+        console.log(claimableRewards.toString());
+
+        const assetData = await incentivesProxy.getAssetData(asset);
+        console.log('assetData');
+        console.log(assetData.map(d => d.toBigInt()));
+        console.log();
+
+        const progressiveInfo = await incentivesProxy.getProgressiveRewardsInfo(
+            [asset],
+            user
+        );
+        console.log('progressive info');
+        console.log('total rewards', progressiveInfo[0].toString());
+        console.log('pending rewards', progressiveInfo[1].toString());
+        console.log('claimable rewards', progressiveInfo[2].toString());
     });
